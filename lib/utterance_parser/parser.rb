@@ -19,8 +19,16 @@ module UtteranceParser
       end
     end
 
-    def train(example_templates)
-      examples = Generator.generate(example_templates)
+    def train(examples)
+      case examples
+      when Array
+        # Array of Examples
+      when Hash
+        # Hash of templates { "template" => "intent", ... }
+        examples = Generator.generate(examples)
+      else
+        raise ArgumentError, "Expected array of Example or hash"
+      end
 
       examples.each do |example|
         @classifier.train(example.pos_tokens, example.intent)
