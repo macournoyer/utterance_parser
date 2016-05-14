@@ -22,12 +22,11 @@ module UtteranceParser
     def train(examples)
       case examples
       when Array
-        # Array of Examples
+        # All good!
       when Hash
-        # Hash of templates { "template" => "intent", ... }
-        examples = Generator.generate(examples)
+        examples = examples.map { |utterance, intent| Example.new(utterance, intent) }
       else
-        raise ArgumentError, "Expected array of Example or hash"
+        raise ArgumentError, "Expected [<Example>, ...] or { utterance => intent, ... }"
       end
 
       examples.each do |example|

@@ -2,9 +2,11 @@
 
 A trainable natural language parser that extracts intent and entities from utterances.
 
+It uses a [Naive Bayes classifier](https://en.wikipedia.org/wiki/Naive_Bayes_classifier) to determine intent and [Conditional random fields](https://en.wikipedia.org/wiki/Conditional_random_field) to extract entities.
+
 For example, it can turn this:
 
-> Remind me to pick up my kids in two hours
+> Remind me to pick up the kids in two hours
 
 into ...
 
@@ -13,7 +15,7 @@ into ...
   # intent
   "reminder",
   # entities
-  {task: "pick up my kids", time: "in two hours"}
+  {task: "pick up the kids", time: "in two hours"}
 ]
 ```
 
@@ -40,6 +42,7 @@ parser.train(
   # Utterance => intent
   "Hi" => "greeting",
   "Hello" => "greeting",
+
   "What time is it" => "time",
   "What's the weather outside" => "weather",
 
@@ -48,19 +51,16 @@ parser.train(
   "Remind me to <task>buy milk</task> <time>in one hour</time>" => "reminder",
   "Remind me to <task>pick up the kids</task> <time>in two hours</time>" => "reminder",
 
-  # You can use lists in `{...}` to generate training examples on the fly.
-  # The following with generate an example for each category in the sequence.
-  "Play some <category>{jazz,blues,rap}</category>" => "play",
-
-  # You can also provide optional parts in `[...]`.
-  "Play something[ please]" => "play",
+  "Play some <playlist>jazz</playlist>" => "play",
+  "Play some <playlist>blues</playlist>" => "play",
+  "Play some <playlist>rap</playlist>" => "play"
 )
 
-parser.parse "Could you play something nice please"
-# => ["play", {}]
+parser.parse "Hello there!"
+# => ["greeting", {}]
 
-parser.parse "Play some hip-hop"
-# => ["play", {category: "hip-hop"}]
+parser.parse "Play some rock"
+# => ["play", {playlist: "rock"}]
 
 parser.parse "Remind me to buy stuff in three hours"
 # => ["reminder", {task: "buy stuff", time: "in three hours"}]

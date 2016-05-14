@@ -9,9 +9,14 @@ class ParserTest < Minitest::Test
       "Hello" => "greeting",
       "What time is it" => "time",
       "What's the weather outside" => "weather",
-      "Remind me to <task>{buy milk,pick up the kids,get stuff done}</task> <time>{tomorrow,in one hour,in two hours}</time>" => "reminder",
-      "Play some <category>{jazz,blues,rap}</category>" => "play",
-      "Play something[ please]" => "play",
+      "Remind me to <task>buy milk</task> <time>tomorrow</time>" => "reminder",
+      "Remind me to <task>pick up the kids</task> <time>in one hour</time>" => "reminder",
+      "Remind me to <task>get stuff done</task> <time>in two hours</time>" => "reminder",
+      "Play some <category>jazz</category>" => "play",
+      "Play some <category>blues</category>" => "play",
+      "Play some <category>rap</category>" => "play",
+      "Play something" => "play",
+      "Play something please" => "play",
     )
   end
 
@@ -32,11 +37,11 @@ class ParserTest < Minitest::Test
     end
   end
 
-  test_parses "Hello there", "greeting"
+  test_parses "Hello there!", "greeting"
 
   test_parses "Could you play something nice please", "play"
 
-  test_parses "Play some hip-hop", "play", category: "hip-hop"
+  test_parses "Play some rock", "play", category: "rock"
 
   test_parses "Remind me to buy stuff in three hours",
               "reminder", task: "buy stuff", time: "in three hours"
