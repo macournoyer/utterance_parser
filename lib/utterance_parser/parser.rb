@@ -47,6 +47,13 @@ module UtteranceParser
       [intent, extract_entities(labeled)]
     end
 
+    def parse_with_probabilities(text)
+      utterance = Utterance.new(text)
+      intents = @classifier.classify(utterance.pos_tokens)
+      labeled = @labeller.label([ utterance.pos_tokens.map { |t| t.join(" ") } ]).first
+      [intents, extract_entities(labeled)]
+    end
+
     def save(path=nil)
       build_save_paths path if path
 
